@@ -1,0 +1,14 @@
+{
+  "name": "trip1",
+  "description": "Book hotels through Trip1's MCP server and pay over x402 on Base. Guides the agent through hotel search, rate comparison, booking, x402 payment handshake, and the CoinGate fallback.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Trivial Corp",
+    "email": "hello@trip1.com",
+    "url": "https://trip1.com"
+  },
+  "homepage": "https://trip1.com/en/agents",
+  "repository": "https://github.com/trivial-corp/agents",
+  "license": "MIT",
+  "keywords": ["hotels", "travel", "x402", "mcp", "usdc", "base", "agents", "payments"]
+}
