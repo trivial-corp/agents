@@ -27,8 +27,8 @@ The user must have Trip1's MCP server connected. If the four tools (`search_hote
 {
   "mcpServers": {
     "trip1": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://trip1.com/api/mcp"]
+      "type": "http",
+      "url": "https://trip1.com/api/mcp"
     }
   }
 }
@@ -64,14 +64,26 @@ If the user is still choosing between multiple hotels, call `get_hotel_details` 
 
 ### 3. Book
 
-Call `purchase_hotel` with:
+Before calling `purchase_hotel`, collect every guest field from the user. All of them are required:
 
-- The `rate_id` from step 2.
-- Guest details (first and last name are required, email is usually required, phone optional).
+- First name, last name
+- Email
+- Phone (e.g. `+44123456789`) — always ask, never default or invent
+- Title (`MR`, `MRS`, `MS`, or `MISS`)
+- Nationality (ISO 3166-1 alpha-2, e.g. `GB`, `US`, `LT`)
 
-Ask for guest details if the user has not provided them. Do not invent or reuse details from earlier in the conversation unless the user confirmed them explicitly for this booking.
+Do not invent values, do not reuse details from earlier in the conversation, and do not silently accept defaults. If a field is missing, ask.
 
-The response is one of two shapes:
+Once all fields are collected, show the user a complete booking summary and get explicit confirmation before calling `purchase_hotel`:
+
+- Hotel, check-in and check-out dates, room type
+- Total price and currency
+- All guest fields
+- Cancellation terms (especially if non-refundable)
+
+Only call `purchase_hotel` after the user confirms with something like "yes", "confirm", or "book it." If they push back on any field, correct it and re-confirm.
+
+Pass `rate_id` from step 2 and the confirmed guest details. The response is one of two shapes:
 
 - **x402 challenge** (default): the response includes a `payment_url` that returns HTTP 402 with a payment challenge. This is for agents with an x402-capable wallet.
 - **CoinGate URL fallback**: the response includes a browser-openable checkout link. This happens when the server decides the client does not have x402 support or when x402 settlement is unavailable for the currency.
