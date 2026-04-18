@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Agent skills and MCP plugin for booking hotels on Trip1 with crypto",
-    "version": "1.0.1"
+    "version": "1.0.2"
   },
   "plugins": [
     {
