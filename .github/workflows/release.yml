@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Package plugin bundle
+        run: |
+          mkdir -p dist
+          zip -r dist/agents.zip . \
+            -x "*.git*" "*.DS_Store" "dist/*" "README.md" "LICENSE"
+
+      - name: Package each skill
+        run: |
+          for dir in skills/*/; do
+            name=$(basename "$dir")
+            (cd skills && zip -r "../dist/${name}.zip" "$name")
+          done
+
+      - name: Create release and upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
