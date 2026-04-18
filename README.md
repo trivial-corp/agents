@@ -91,12 +91,9 @@ Without it, `purchase_hotel` returns a CoinGate URL that a human finishes in a b
 
 ## Releasing
 
-Bump `version` in `.claude-plugin/plugin.json` and merge to `main`. The rest is automatic:
+Bump `version` in `.claude-plugin/plugin.json` and merge to `main`. The `release.yml` workflow tags `vX.Y.Z`, packages `agents.zip` (full plugin bundle) plus one zip per skill under `skills/`, and publishes them to a GitHub release.
 
-1. `tag.yml` sees the version change, creates `vX.Y.Z`, and pushes the tag.
-2. `release.yml` fires on the tag, packages `agents.zip` (full plugin bundle) plus one zip per skill under `skills/`, and uploads them to a new GitHub release.
-
-To tag manually instead, run `git tag -a vX.Y.Z -m "..." && git push origin vX.Y.Z`.
+To cut a release from an existing commit instead, push a tag manually: `git tag -a vX.Y.Z -m "..." && git push origin vX.Y.Z`. The same workflow handles it.
 
 ## Links
 
