@@ -2,8 +2,9 @@ name: Release
 
 on:
   push:
-    tags:
-      - '*'
+    branches: [main]
+    paths: ['.claude-plugin/plugin.json']
+    tags: ['v*']
 
 permissions:
   contents: write
@@ -13,14 +14,57 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine version
+        id: v
+        run: |
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            version="${GITHUB_REF_NAME#v}"
+          else
+            version="$(jq -r .version .claude-plugin/plugin.json)"
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "tag=v${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Check if tag already exists
+        id: tag
+        run: |
+          if git rev-parse "${{ steps.v.outputs.tag }}" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create and push tag
+        if: steps.tag.outputs.exists == 'false' && github.ref_type == 'branch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.v.outputs.tag }}" -m "${{ steps.v.outputs.tag }}"
+          git push origin "${{ steps.v.outputs.tag }}"
+
+      - name: Skip if release already exists
+        id: rel
+        run: |
+          if gh release view "${{ steps.v.outputs.tag }}" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Package plugin bundle
+        if: steps.rel.outputs.exists == 'false'
         run: |
           mkdir -p dist
           zip -r dist/agents.zip . \
             -x "*.git*" "*.DS_Store" "dist/*" "README.md" "LICENSE"
 
       - name: Package each skill
+        if: steps.rel.outputs.exists == 'false'
         run: |
           for dir in skills/*/; do
             name=$(basename "$dir")
@@ -28,8 +72,10 @@ jobs:
           done
 
       - name: Create release and upload assets
+        if: steps.rel.outputs.exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.v.outputs.tag }}
           files: dist/*.zip
           generate_release_notes: true
         env:
