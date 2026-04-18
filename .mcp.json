@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "trip1": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://trip1.com/api/mcp"]
+    }
+  }
+}
