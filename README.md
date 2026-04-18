@@ -33,8 +33,8 @@ Two options.
 {
   "mcpServers": {
     "trip1": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://trip1.com/api/mcp"]
+      "type": "http",
+      "url": "https://trip1.com/api/mcp"
     }
   }
 }
