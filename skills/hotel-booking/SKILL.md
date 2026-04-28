@@ -1,9 +1,14 @@
 ---
 name: trip1-hotel-booking
 description: Use this skill when the user wants to book a hotel, search for accommodations, check hotel prices or availability, or asks about staying somewhere for specific dates. The skill guides Claude through the Trip1 MCP tools and the x402 payment flow, including the CoinGate fallback for agents without an x402-capable wallet.
+metadata:
+  author: Trip1
+  homepage: https://trip1.com
 ---
 
 # Trip1 Hotel Booking
+
+Landing page: <https://trip1.com/en/agents>
 
 Trip1 is an MCP server that exposes roughly 3 million hotels across 200+ countries. Agents search inventory, fetch rates, and book rooms through four tools. Payment runs inline over x402 on Base (USDC), with a CoinGate fallback URL for any client that lacks an x402-capable wallet.
 
