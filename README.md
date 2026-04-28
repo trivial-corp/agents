@@ -1,5 +1,7 @@
 # Trip1 Agent Skills
 
+[![smithery badge](https://smithery.ai/badge/trip1/trip1)](https://smithery.ai/servers/trip1/trip1)
+
 A plugin that lets agents book hotels on [Trip1](https://trip1.com) through the Trip1 MCP server, paid in USDC on Base over [x402](https://x402.org).
 
 Ships one skill, `hotel-booking`, which activates when the user wants to find, compare, or book a hotel.
