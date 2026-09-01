@@ -5,13 +5,13 @@
     "email": "hello@trip1.com"
   },
   "metadata": {
-    "description": "Agent skills and MCP plugin for booking hotels on Trip1 with crypto",
+    "description": "Agent skills and MCP plugin for booking hotels on trip1 with crypto",
     "version": "1.0.2"
   },
   "plugins": [
     {
       "name": "trip1",
-      "description": "Book hotels on Trip1 through MCP tools, paid in USDC on Base over x402. 3M+ properties, 200+ countries, CoinGate fallback for browser checkout.",
+      "description": "Book hotels on trip1 through MCP tools, paid in USDC on Base over x402. 3M+ properties, 200+ countries, CoinGate fallback for browser checkout.",
       "source": "./",
       "homepage": "https://trip1.com/en/agents",
       "repository": "https://github.com/trivial-corp/agents",
