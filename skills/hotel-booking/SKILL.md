@@ -65,9 +65,9 @@ Present results as a short list, typically 3 to 6, with name, price per night, r
 
 ### 2. Compare
 
-When the user picks or narrows down, call `get_hotel_details` for that hotel ID. This returns rooms, rates, cancellation terms, and live availability.
+When the user picks or narrows down, call `get_hotel_details` for that hotel ID. This returns the hotel's rooms with current rates: each rate has a signed `id`, board type, price, and currency. Cancellation terms are not in the response.
 
-Show the user a compact room list with nightly rate, total, refund policy, and the `rate_id` you will use for booking. Flag non-refundable rates explicitly.
+Show the user a compact room list with board type, total price, and the rate `id` you will use for booking.
 
 If the user is still choosing between multiple hotels, call `get_hotel_details` for each and compare. Do not call `purchase_hotel` until the user has picked both a hotel and a specific rate.
 
@@ -88,7 +88,6 @@ Once all fields are collected, show the user a complete booking summary and get 
 - Hotel, check-in and check-out dates, room type
 - Total price and currency
 - All guest fields
-- Cancellation terms (especially if non-refundable)
 
 Only call `purchase_hotel` after the user confirms with something like "yes", "confirm", or "book it." If they push back on any field, correct it and re-confirm.
 
@@ -118,7 +117,7 @@ Report to the user with:
 ## Things to get right
 
 - **Do not invent rates.** Always quote what `get_hotel_details` returns, including currency. Prices in search results can drift from final rates.
-- **Cancellation matters.** If the user asks about refunds, quote the cancellation terms returned by `get_hotel_details` verbatim. Do not paraphrase.
+- **Do not invent cancellation terms.** The API does not return them. If the user asks about refunds, say the terms are shown on the trip1 cart and hotel pages and link the booking URL — never state a refund policy the tools did not provide.
 - **Do not repeat an entire search response.** Summarize and let the user ask for more.
 
 ## When things fail
