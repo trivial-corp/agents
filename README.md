@@ -1,15 +1,15 @@
-# Trip1 Agent Skills
+# trip1 Agent Skills
 
 [![smithery badge](https://smithery.ai/badge/trip1/trip1)](https://smithery.ai/servers/trip1/trip1)
 
-A plugin that lets agents book hotels on [Trip1](https://trip1.com) through the Trip1 MCP server, paid in USDC on Base over [x402](https://x402.org).
+A plugin that lets agents book hotels on [trip1](https://trip1.com) through the trip1 MCP server, paid in USDC on Base over [x402](https://x402.org).
 
 Ships one skill, `hotel-booking`, which activates when the user wants to find, compare, or book a hotel.
 
 ## What's in the box
 
 - `.claude-plugin/plugin.json` — Claude Code / Claude Desktop plugin manifest
-- `.mcp.json` — wires the Trip1 remote MCP server so the plugin is self-contained
+- `.mcp.json` — wires the trip1 remote MCP server so the plugin is self-contained
 - `skills/hotel-booking/SKILL.md` — the skill that orchestrates the full booking flow
 
 ## Install
@@ -62,7 +62,7 @@ The skill doesn't apply here; ChatGPT doesn't load `SKILL.md` files. The tool de
 
 ### Cowork and other MCP-aware clients
 
-Any client that speaks remote MCP (Streamable HTTP) can add Trip1 as a connector. Paste the same `mcpServers` block above, or the bare URL `https://trip1.com/api/mcp` if the client accepts URLs directly.
+Any client that speaks remote MCP (Streamable HTTP) can add trip1 as a connector. Paste the same `mcpServers` block above, or the bare URL `https://trip1.com/api/mcp` if the client accepts URLs directly.
 
 ### Local development
 
@@ -77,13 +77,13 @@ claude --plugin-dir .
 The skill is instructions, not code. It tells the agent:
 
 - when a hotel-booking intent is present and the skill should activate
-- which Trip1 MCP tools to call, in what order, with which arguments
+- which trip1 MCP tools to call, in what order, with which arguments
 - how to handle the x402 payment handshake and the CoinGate fallback
 - how to report results and recover from rate drops, payment failures, and polling timeouts
 
 ## Paying on the agent's behalf
 
-For fully hands-off agent payments, load an x402-capable wallet MCP alongside Trip1. The simplest option:
+For fully hands-off agent payments, load an x402-capable wallet MCP alongside trip1. The simplest option:
 
 ```bash
 npx @coinbase/payments-mcp
