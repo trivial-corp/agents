@@ -146,7 +146,7 @@ Then poll `get_order_details` until `ready` is true.
 
 ### Without a wallet
 
-Call `purchase_hotel` with `payment_service: "coingate"`. It returns a CoinGate checkout URL that a human finishes in a browser, paying in USDC or 120+ other cryptocurrencies.
+Call `purchase_hotel` with `payment_service: "coingate"`. It returns a CoinGate checkout URL that a human finishes in a browser. CoinGate takes 120+ cryptocurrencies, including USDC.
 
 ## Publishing to the MCP Registry
 
