@@ -7,7 +7,7 @@
     "email": "hello@trip1.com",
     "url": "https://trip1.com"
   },
-  "homepage": "https://trip1.com/en/agents",
+  "homepage": "https://trip1.com/agents",
   "repository": "https://github.com/trivial-corp/agents",
   "license": "MIT",
   "keywords": ["hotels", "travel", "x402", "mcp", "usdc", "base", "agents", "payments"]

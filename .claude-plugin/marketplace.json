@@ -13,7 +13,7 @@
       "name": "trip1",
       "description": "Book hotels on trip1 through MCP tools, paid in USDC on Base over x402. 3M+ properties, 200+ countries, CoinGate fallback for browser checkout.",
       "source": "./",
-      "homepage": "https://trip1.com/en/agents",
+      "homepage": "https://trip1.com/agents",
       "repository": "https://github.com/trivial-corp/agents",
       "keywords": ["hotels", "travel", "mcp", "x402", "usdc", "base", "booking", "crypto"],
       "category": "commerce"

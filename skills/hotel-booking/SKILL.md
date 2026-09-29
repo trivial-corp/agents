@@ -8,7 +8,7 @@ metadata:
 
 # trip1 Hotel Booking
 
-Landing page: <https://trip1.com/en/agents>
+Landing page: <https://trip1.com/agents>
 
 trip1 is an MCP server that exposes roughly 3 million hotels across 200+ countries. Agents search inventory, fetch rates, and book rooms through four tools. Payment runs inline over x402 on Base (USDC), with a CoinGate fallback URL for any client that lacks an x402-capable wallet.
 
@@ -39,7 +39,7 @@ The user must have trip1's MCP server connected. If the four tools (`search_hote
 }
 ```
 
-For the agent to pay on its own without a browser redirect, an x402-capable wallet MCP also needs to be loaded. The simplest option is Coinbase Payments MCP (`npx @coinbase/payments-mcp`). Without it, `purchase_hotel` will return a CoinGate URL the human finishes in a browser.
+For the agent to pay on its own without a browser redirect, an x402-capable wallet MCP also needs to be loaded. The simplest option is Coinbase Payments MCP (`npx @coinbase/payments-mcp`). Without one, call `purchase_hotel` with `payment_service: "coingate"` so it returns a CoinGate URL the human finishes in a browser.
 
 ## Booking flow
 
@@ -65,9 +65,9 @@ Present results as a short list, typically 3 to 6, with name, price per night, r
 
 ### 2. Compare
 
-When the user picks or narrows down, call `get_hotel_details` for that hotel ID. This returns the hotel's rooms with current rates: each rate has a signed `id`, board type, price, and currency. Cancellation terms are not in the response.
+When the user picks or narrows down, call `get_hotel_details` for that hotel ID. This returns the hotel's rooms with current rates: each rate has a signed `id`, board type, price, currency, `refundability` (`fully_refundable`, `partially_refundable` or `non_refundable`) and, when refundable, a `cancellation_deadline`. If `prices_changed` is true, the price `search_hotels` quoted is no longer on offer; tell the user prices changed.
 
-Show the user a compact room list with board type, total price, and the rate `id` you will use for booking.
+Show the user a compact room list with board type, total price, refundability, and the rate `id` you will use for booking. Flag non-refundable rates explicitly.
 
 If the user is still choosing between multiple hotels, call `get_hotel_details` for each and compare. Do not call `purchase_hotel` until the user has picked both a hotel and a specific rate.
 
@@ -88,13 +88,14 @@ Once all fields are collected, show the user a complete booking summary and get 
 - Hotel, check-in and check-out dates, room type
 - Total price and currency
 - All guest fields
+- Refundability and cancellation deadline, especially if non-refundable
 
 Only call `purchase_hotel` after the user confirms with something like "yes", "confirm", or "book it." If they push back on any field, correct it and re-confirm.
 
 Pass `rate_id` from step 2 and the confirmed guest details. For a browser checkout instead of x402, set `payment_service: "coingate"`. The response is one of two shapes:
 
 - **x402 challenge** (default): the response includes a `payment_url` that returns HTTP 402 with a payment challenge. This is for agents with an x402-capable wallet.
-- **CoinGate URL fallback**: the response includes a browser-openable checkout link. This happens when the server decides the client does not have x402 support or when x402 settlement is unavailable for the currency.
+- **CoinGate URL**: when you passed `payment_service: "coingate"`, the response includes a browser-openable checkout link.
 
 ### 4. Pay
 
@@ -117,14 +118,14 @@ Report to the user with:
 ## Things to get right
 
 - **Do not invent rates.** Always quote what `get_hotel_details` returns, including currency. Prices in search results can drift from final rates.
-- **Do not invent cancellation terms.** The API does not return them. If the user asks about refunds, say the terms are shown on the trip1 cart and hotel pages and link the booking URL — never state a refund policy the tools did not provide.
+- **Do not invent cancellation terms.** Quote each rate's `refundability` and `cancellation_deadline` exactly as `get_hotel_details` returns them. Never infer a refund policy the tools did not provide.
 - **Do not repeat an entire search response.** Summarize and let the user ask for more.
 
 ## When things fail
 
 - **No hotels found:** the search radius and occupancy are fixed server-side, so widen what you control: try a nearby or broader destination name, or shift the dates by a day on either side. Tell the user what you changed. A past `check_in` is rejected, not empty — the error names the destination's own today; retry with a valid date.
 - **Selected rate becomes unavailable during booking:** rerun `get_hotel_details` and let the user pick a new rate. Do not auto-substitute.
-- **x402 payment fails:** return the error to the user. Offer to fall back to the CoinGate URL if one is available in the `purchase_hotel` response.
+- **x402 payment fails:** return the error to the user. Offer a browser checkout instead: call `purchase_hotel` again with the same details and `payment_service: "coingate"`.
 - **Order polling never flips `ready` to true:** after roughly a minute of polling, report the `cart_id` to the user and tell them to check status at `https://trip1.com/en/cart/<signed id>` or email support.
 
 ## Tool quick reference
@@ -138,6 +139,6 @@ Report to the user with:
 
 ## Links
 
-- Landing: https://trip1.com/en/agents
+- Landing: https://trip1.com/agents
 - MCP Registry: https://registry.modelcontextprotocol.io (search `com.trip1`)
 - x402: https://x402.org
