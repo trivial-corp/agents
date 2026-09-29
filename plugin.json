@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "trip1",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Book hotels through trip1's MCP server and pay in USDC on Base over x402. 3M+ properties in 200+ countries, with a CoinGate fallback for browser checkout.",
   "author": { "name": "Trivial Corp", "url": "https://trip1.com" },
   "homepage": "https://trip1.com/agents",
